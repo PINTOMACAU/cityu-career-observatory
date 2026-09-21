@@ -1,0 +1,27 @@
+{
+  "title": "BBA Career Journey Survey",
+  "description": "Faculty of Business, City University of Macau",
+  "pages": [
+    {
+      "name": "student_profile",
+      "elements": [
+        {
+          "type": "dropdown",
+          "name": "year",
+          "title": "Current Year of Study / 目前就读年级",
+          "choices": [
+            "Year 1 / 一年级",
+            "Year 2 / 二年级",
+            "Year 3 / 三年级"
+          ]
+        },
+        {
+          "type": "comment",
+          "name": "why_cityu",
+          "title": "Why did you choose City University of Macau? / 您为什么选择澳门城市大学？"
+        }
+      ]
+    }
+  ]
+}
+``
