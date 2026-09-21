@@ -1,58 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>CityU Career Observatory</title>
-
-<link href="https://unpkg.com/survey-core/defaultV2cript src="https://unpkg.com/surveycore.min.jsscript>
-<script src="https://unpkgs-ui/survey-js-ui.min.jsscript>
-
-<style>
-body{
-    font-family: Arial, sans-serif;
-    margin:20px;
-}
-
-#surveyContainer{
-    max-width:1000px;
-    margin:auto;
-}
-</style>
-
+<meta charset="UTF-8">
+<title>Survey Loader Test</title>
 </head>
 
 <body>
 
-<div id="surveyContainer"></div>
+<h1>Survey Loader Test</h1>
+
+<div id="result">Loading...</div>
 
 <script>
 
-const params = new URLSearchParams(window.location.search);
-const formFile = params.get("form") || "survey123.json";
-
-fetch(formFile)
+fetch("survey123.json")
 .then(response => response.json())
-.then(json => {
-
-    const survey = new Survey.Model(json);
-
-    survey.onComplete.add(function(sender) {
-
-        alert("Survey completed. Thank you!");
-
-        console.log(sender.data);
-
-    });
-
-    survey.render("surveyContainer");
-
+.then(data => {
+    document.getElementById("result").innerHTML =
+        "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
 })
 .catch(error => {
-    document.getElementById("surveyContainer").innerHTML =
-    "<h2>Error loading survey</h2>";
-    console.error(error);
+    document.getElementById("result").innerHTML =
+        "<h2 style='color:red'>JSON ERROR</h2><pre>"
+        + error +
+        "</pre>";
 });
 
 </script>
