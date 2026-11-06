@@ -12,7 +12,7 @@
 
 ## A1. What this is
 
-A WeChat mini program that asks final-year BBA students, twice a year, what they intend to do, what they have done to prepare, and how ready they feel. Five screens, about five minutes, no name and no student number.
+A WeChat mini program that asks final-year BBA students, twice a year, what they intend to do, what they have done to prepare, and how ready they feel. Three screens — intro, survey, confirmation — about five minutes, no name and no student number.
 
 It is **built and testable today**. It is **not live**, because going live needs one thing only the university can provide: a mini program account registered to CityU. That account also brings the database with it. Everything on our side is finished.
 
