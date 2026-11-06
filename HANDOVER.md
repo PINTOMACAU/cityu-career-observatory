@@ -2,7 +2,7 @@
 
 **For:** Faculty of Business management (Part A) and CityU IT (Part B).
 **From:** José Pinto, Faculty of Business.
-**Version:** November 2026. Code state: commit `4e57299` on `main`.
+**Version:** November 2026, `main` branch.
 
 > **How to use this document.** Part A is one page and needs no technical knowledge. Part B is a click-by-click playbook: every step says where to click, what you should see, and what to do if you do not. Print it and tick the boxes. If a step does not behave as described, the troubleshooting table in §B11 covers the failures that actually happen; if it is not there, send one line (template in §B12) and nothing else is needed.
 
