@@ -1,0 +1,12 @@
+.center {
+  text-align: center;
+  padding-top: 64rpx;
+  padding-bottom: 48rpx;
+}
+
+.check {
+  font-size: 88rpx;
+  color: #1f8a4c;
+  line-height: 1;
+  margin-bottom: 24rpx;
+}

@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/intro/intro",
+    "pages/survey/survey",
+    "pages/done/done"
+  ],
+  "window": {
+    "navigationBarTitleText": "BBA Career Journey",
+    "navigationBarBackgroundColor": "#003366",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fa",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

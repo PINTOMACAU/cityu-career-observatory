@@ -1,0 +1,15 @@
+<view class="page">
+  <view class="card center">
+    <view class="check">✓</view>
+    <view class="title">Thank you</view>
+    <view class="body">Your {{cycleText}} response has been recorded.</view>
+    <view class="body">您的 {{cycleText}} 问卷已提交，感谢参与。</view>
+
+    <view class="divider"></view>
+
+    <view class="body">Next round opens {{nextDue}}.</view>
+    <view class="muted">下一轮开放时间：{{nextDue}}</view>
+
+    <view class="btn btn-primary" bindtap="close">Done / 完成</view>
+  </view>
+</view>

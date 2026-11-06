@@ -1,0 +1,47 @@
+<view class="page">
+  <view class="card">
+    <view class="title">BBA Career Journey</view>
+    <view class="body">Faculty of Business, City University of Macau</view>
+    <view class="muted">澳门城市大学商学院 · 职业发展观察</view>
+
+    <view class="divider"></view>
+
+    <view class="body">
+      Final-year students are asked to complete this short survey once each semester.
+      Results are used only in aggregate form, to improve employability support.
+    </view>
+    <view class="body" style="margin-top: 12rpx;">
+      四年级学生每学期填写一次，约需 5 分钟。调查结果仅用于汇总分析，以改进就业支持服务。
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="body">· Anonymous — no name or student number is collected / 匿名填写，不收集姓名或学号</view>
+    <view class="body">· One response per round / 每轮只能提交一次</view>
+    <view class="body">· Answers are saved as a draft until you submit / 提交前自动保存草稿</view>
+  </view>
+
+  <view class="card" wx:if="{{loading}}">
+    <view class="muted">Checking your submission status… / 正在查询提交状态…</view>
+  </view>
+
+  <view class="card" wx:elif="{{offline}}">
+    <view class="body">Could not reach the server. / 无法连接服务器。</view>
+    <view class="muted">You can fill in the survey now; submission will try the connection again.</view>
+    <view class="btn btn-primary" bindtap="start">Start anyway / 仍然开始</view>
+    <view class="btn btn-ghost" bindtap="retry">Retry / 重试</view>
+  </view>
+
+  <view class="card" wx:elif="{{answered}}">
+    <view class="subtitle">Already completed / 已完成</view>
+    <view class="body">You submitted the {{cycleText}} round{{submittedText ? ' on ' + submittedText : ''}}.</view>
+    <view class="body">下一轮开放时间：{{nextDue}}</view>
+    <view class="muted" style="margin-top: 12rpx;">Next round opens {{nextDue}}.</view>
+  </view>
+
+  <view class="card" wx:else>
+    <view class="subtitle">Round {{cycleText}}</view>
+    <view class="body">This round is open. It takes about 5 minutes.</view>
+    <view class="btn btn-primary" bindtap="start">Start survey / 开始填写</view>
+  </view>
+</view>

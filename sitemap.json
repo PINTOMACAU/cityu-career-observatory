@@ -1,0 +1,9 @@
+{
+  "desc": "Survey pages are shared privately with students; keep them out of WeChat search.",
+  "rules": [
+    {
+      "action": "disallow",
+      "page": "*"
+    }
+  ]
+}

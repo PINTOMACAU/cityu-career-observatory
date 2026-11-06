@@ -1,0 +1,9 @@
+{
+  "name": "submitResponse",
+  "version": "1.0.0",
+  "description": "Store one survey response per student per six-month round",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

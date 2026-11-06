@@ -1,0 +1,18 @@
+{
+  "description": "Faculty of Business career journey survey - WeChat mini program",
+  "appid": "touristappid",
+  "projectname": "cityu-career-observatory",
+  "miniprogramRoot": "./",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "compileType": "miniprogram",
+  "libVersion": "latest",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "coverView": true,
+    "nodeModules": false
+  }
+}

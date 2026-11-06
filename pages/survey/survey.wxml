@@ -1,0 +1,79 @@
+<view class="page">
+  <view class="progress">
+    <view class="progress-fill" style="width: {{percent}}%;"></view>
+  </view>
+  <view class="progress-text">
+    <text>{{section.title}}</text>
+    <text class="muted">{{index + 1}} / {{total}}</text>
+  </view>
+
+  <view class="card">
+    <view class="subtitle">{{section.titleZh}}</view>
+    <view wx:if="{{section.legend}}" class="muted legend">{{section.legend}}</view>
+    <view class="divider"></view>
+
+    <view class="field" wx:for="{{section.elements}}" wx:key="name" wx:for-item="q">
+      <view class="label">
+        <text>{{q.title}}</text>
+        <text class="req" wx:if="{{q.required}}">*</text>
+        <view class="label-zh">{{q.titleZh}}</view>
+      </view>
+
+      <picker
+        wx:if="{{q.type === 'select'}}"
+        mode="selector"
+        range="{{q.choices}}"
+        range-key="label"
+        value="{{picks[q.name]}}"
+        data-name="{{q.name}}"
+        bindchange="onSelect"
+      >
+        <view class="control {{labels[q.name] ? '' : 'placeholder'}}">
+          {{labels[q.name] || 'Please choose / 请选择'}}
+        </view>
+      </picker>
+
+      <view wx:elif="{{q.type === 'scale'}}" class="scale">
+        <view
+          wx:for="{{scaleValues}}"
+          wx:key="*this"
+          wx:for-item="v"
+          class="scale-item {{answers[q.name] === v ? 'scale-on' : ''}}"
+          data-name="{{q.name}}"
+          data-value="{{v}}"
+          bindtap="onScale"
+        >{{v}}</view>
+      </view>
+
+      <input
+        wx:elif="{{q.type === 'text'}}"
+        class="control input"
+        value="{{answers[q.name]}}"
+        maxlength="200"
+        placeholder="{{q.placeholderEn}}"
+        data-name="{{q.name}}"
+        bindinput="onText"
+      />
+
+      <textarea
+        wx:else
+        class="control textarea"
+        value="{{answers[q.name]}}"
+        maxlength="1000"
+        auto-height
+        placeholder="Your answer / 请输入"
+        data-name="{{q.name}}"
+        bindinput="onText"
+      />
+    </view>
+  </view>
+
+  <view class="row">
+    <view wx:if="{{index > 0}}" class="btn btn-ghost" bindtap="back">Back / 上一步</view>
+    <view class="btn btn-primary {{submitting ? 'busy' : ''}}" bindtap="next">
+      {{isLast ? 'Submit / 提交' : 'Next / 下一步'}}
+    </view>
+  </view>
+
+  <view class="muted foot">Draft saved automatically / 自动保存草稿</view>
+</view>
