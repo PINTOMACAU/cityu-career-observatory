@@ -1,97 +1,313 @@
-# Handover: Career Intelligence and Graduate Outcomes Observatory
+# Career Observatory — WeChat mini program handover
 
-**For:** Faculty of Business management, and CityU IT.
+**For:** Faculty of Business management (Part A) and CityU IT (Part B).
 **From:** José Pinto, Faculty of Business.
-**Purpose:** Everything needed to inspect, test, approve and operate the survey without a hand-holding session. Nothing here requires reading source code, though the code is available.
+**Version:** November 2026. Code state: commit `4e57299` on `main`.
+
+> **How to use this document.** Part A is one page and needs no technical knowledge. Part B is a click-by-click playbook: every step says where to click, what you should see, and what to do if you do not. Print it and tick the boxes. If a step does not behave as described, the troubleshooting table in §B11 covers the failures that actually happen; if it is not there, send one line (template in §B12) and nothing else is needed.
 
 ---
 
-## 1. One-page summary
+# Part A — For the Dean and the Associate Dean
 
-The Faculty of Business needs a recurring stream of evidence on what final-year students intend to do, what they have done to get there, and how ready they feel. This project collects that evidence twice a year, for the whole cohort, from a phone, in about five minutes, with no student numbers and no names.
+## A1. What this is
 
-It is **built and testable today**, but **not live**: it runs in WeChat's tourist mode, which has no database. To go live the university has to register the mini program (AppID), which also unlocks the cloud database and the two server functions. Everything else is done.
+A WeChat mini program that asks final-year BBA students, twice a year, what they intend to do, what they have done to prepare, and how ready they feel. Five screens, about five minutes, no name and no student number.
 
-| | |
-| --- | --- |
-| What exists | A WeChat mini program: intro screen, 5-section survey, confirmation; two cloud functions; a schema guard; a static web preview of the same instrument |
-| Questions | 25, of which 19 required; bilingual; versioned |
-| Cadence | Two rounds per academic year (Feb–Jul, Aug–Jan), enforced server-side |
-| Duplicate control | One response per student per round, enforced by the database key, not by a client check |
-| What a student gives up | Nothing but a WeChat openid, and only for duplicate control. No name, no student number, no contact details |
-| What IT must do | Register the AppID, create one cloud environment, deploy two functions, set one collection permission. Estimated one working day, mostly waiting on registration approvals |
-| Recurring cost | RMB 300/year WeChat certification. Cloud free tier covers this volume; no server, no licence, no per-student cost |
-| Decision owner | The four decisions in §10 are for the Faculty and IT; each has a recommendation |
+It is **built and testable today**. It is **not live**, because going live needs one thing only the university can provide: a mini program account registered to CityU. That account also brings the database with it. Everything on our side is finished.
 
----
+## A2. Why WeChat, and why not the Registry route
 
-## 2. Where the work is
+Students already live in WeChat. There is no app to install, no password to remember, no login screen: the survey opens from a message or a QR code and the phone already knows who the user is well enough to prevent a double submission.
 
-| What | Where |
-| --- | --- |
-| Source code | https://github.com/PINTOMACAU/cityu-career-observatory |
-| This handover | https://github.com/PINTOMACAU/cityu-career-observatory/blob/main/HANDOVER.md |
-| Web preview (static, does not save) | https://pintomacau.github.io/cityu-career-observatory/ |
-| Surrender of access | The repository can be transferred to a CityU GitHub organisation, or made private and archived, once IT has it |
+The Registry route produces course-level satisfaction and double-barrelled items ("the syllabus was clear and complete and served as a guide"). It cannot tell the Faculty what a cohort expects to earn, which industries they target, how many internships they actually completed, or whether students feel more employable after a course change. Those are the questions a Faculty can act on, and they are the questions this instrument asks.
 
-The repository is public so that IT can open it without an account. It contains no credentials, no AppID secret, no student data, and no personal information. It should be made private once IT has taken it over.
+## A3. What it gives the Faculty
 
----
+- **A repeated measure, not a one-off.** The same instrument every semester, so a cohort can be followed and a change can be tested rather than asserted.
+- **Cohort-scale coverage.** Every final-year student, not a self-selected sample, because it arrives through the channel students already use.
+- **Evidence for accreditation, programme review and the annual report** that does not depend on a survey someone has to re-commission each year.
+- **A research asset.** The readiness scale is a publishable dependent variable; the free-text item is a source of foresight on what students expect from the labour market. Course evaluation can be attached to it later as an outcome measure.
+- **No marginal cost per student.** No licence, no server, no per-response fee.
 
-## 3. What a student sees
+## A4. What must be decided
 
-Three screens, in this order:
-
-1. **Intro.** Says what the survey is, that it is anonymous, that it is one response per round, and that answers are kept as a draft until submitted. It checks with the server whether this WeChat account has already answered this round. Three states: *round open → Start*, *already completed → when, and when the next round opens*, *server unreachable → Start anyway / Retry*.
-2. **Survey.** Five sections, one screen at a time, progress indicator, back and next. Required questions block *next* with a toast. Every answer is written to local storage as it is typed, so a call, a dead battery or a closed app does not lose work.
-3. **Confirmation.** Says the round is complete and when the next round opens. A close button returns to the intro, which now shows *already completed*.
-
-Nothing is shown to the student after submission: no score, no comparison, no feedback. This is deliberate; it keeps the instrument neutral and avoids promising analysis the Faculty has not committed to.
-
----
-
-## 4. What is measured
-
-| Section | Questions | What it captures |
+| # | Decision | Recommendation |
 | --- | --- | --- |
-| About You | 3 | Year 4 or graduated; programme; country/region of origin |
-| Career Aspirations | 6 | Why CityU, why the major, preferred career and industry, expected monthly salary (MOP), postgraduate intentions |
-| Experience During Studies | 8 | Internships (whether and how many), competitions, certifications, exchange, leadership, AI tools used, career coaching, industry contacts |
-| Career Readiness | 6 | Six statements on a 1–5 scale: I know the career I want; I know how to obtain it; I have relevant experience; I have useful professional contacts; I feel employable; I am confident about finding employment |
-| Suggestions | 1 | Free text: what additional support would improve employability |
+| 1 | Who holds the mini program account (AppID) | The university, used by the Faculty, with the maintainer added as a project member. An account held by an individual cannot be handed over cleanly later |
+| 2 | Who pays the annual certification | The Faculty, as an operating cost, not a research grant. It is annual and lapses into restricted operation if unpaid |
+| 3 | Which cloud environment, and who administers it | One environment for this mini program only, administered by IT, with the maintainer holding deployment rights. Sharing an environment with other applications complicates cost and access review |
+| 4 | Who owns the responses, and who approves an export | The Faculty owns; IT is custodian; the Dean (or a named delegate) approves exports for research use; the maintainer prepares them. **Decide this before the first real response** — it determines what the privacy declaration says |
 
-The full instrument, with every wording and every bilingual label, is `data/questions.js`. Each question has a stable machine name (the stored column), which is why names must never be renamed later — see §12.
+## A5. What it costs
 
-The six readiness statements are the part that can be compared across rounds and, if the Faculty wants it, benchmarked against published employability scales. They are also the part that could later be attached to course evaluation as an outcome measure, which is the externality argument: the same data stream can test whether a course change moved how prepared students feel, without asking students a second set of double-barrelled questions.
+| Item | Amount | Notes |
+| --- | --- | --- |
+| WeChat certification | RMB 300 / year (mainland entity); overseas entities are quoted in USD, about USD 99 / year | Confirm the current fee at registration; the entity type decides which applies |
+| Cloud database and functions | Effectively zero at this volume | A cohort survey twice a year sits inside the free tier; the paid floor is tens of RMB per month |
+| Server, licence, per-student fee | Zero | There is no server to run and no commercial dependency |
+| IT time | Under one working day | Part B, steps 1–9, most of it waiting on registration approvals |
+| Faculty time | A few hours per round | Export and analysis |
+
+Already committed: the instrument, the code, the schema guard, the acceptance test and this document.
+
+## A6. What we are asking for
+
+1. Confirm the principle: the Faculty collects its own outcome evidence, in addition to whatever the Registry collects.
+2. Nominate the IT colleague who will own Part B.
+3. Approve the certification fee and the cloud environment.
+
+Part B can then proceed without me.
 
 ---
 
-## 5. How a round works
+# Part B — For IT
 
-Two rounds per academic year, computed in UTC+8 (Macau) on **both** the phone and the server, so the boundary never depends on where a device is:
+Nothing here requires reading the source code. The code is small and commented if you want to.
 
-- **H1** = 1 February to 31 July, labelled `YYYYH1`
-- **H2** = 1 August to 31 January, labelled `YYYYH2`, where January belongs to the previous year's H2
+## B0. What you are setting up, in five lines
+
+1. A WeChat **mini program account** owned by CityU, which yields an **AppID**.
+2. A **云开发 (CloudBase) environment**, which is a managed database plus two small server functions.
+3. The two functions deployed into that environment.
+4. One collection permission tightened.
+5. A privacy declaration and a review submission.
+
+There is no server, no container, no CI, no certificate, no domain to buy, and no dependency to install beyond what WeChat's own tooling does.
+
+## B1. Prerequisites — confirm before starting
+
+| Need | Who has it | Notes |
+| --- | --- | --- |
+| A WeChat account that administers the university's official accounts | Communications / IT | This is the only step that needs the university's identity |
+| Business registration document of the entity | Finance / Legal | Needed at registration |
+| Administrator's ID or passport, and a mobile number that receives SMS | The administrator | WeChat sends the verification code there |
+| A Windows or macOS machine | IT | 微信开发者工具 runs on both; 4 GB RAM is enough |
+| A phone with WeChat | IT | To scan the login QR and to test the survey |
+| Node.js 18 or later (optional) | IT | Only for the one-line schema check in step 7; if it is not installed, skip that check — check 6 proves the same thing |
+| This repository | — | §B2 |
+
+## B2. Step 1 — Get the code (2 minutes)
+
+**Where:** any browser.
+
+**Do (no git):** open https://github.com/PINTOMACAU/cityu-career-observatory → green **Code** button → **Download ZIP** → extract anywhere.
+
+**Do (with git):**
+```
+git clone https://github.com/PINTOMACAU/cityu-career-observatory.git
+```
+
+**You should see:** a folder containing `project.config.json`, `app.js`, `cloudfunctions/`, `pages/`.
+
+**If not:** you extracted the ZIP inside another folder — open the inner folder. The one with `project.config.json` at its top level is the one to import.
+
+- [ ] Folder obtained
+
+## B3. Step 2 — Register the mini program (1–3 working days; the only slow step)
+
+**Who:** whoever administers the university's WeChat accounts.
+
+**Where:** https://mp.weixin.qq.com → **立即注册 (Register now)** → **小程序 (Mini program)**.
+
+**Do:** register as an **境外主体 (overseas entity)** using the university's Macau registration, unless the university already holds a mainland entity that this should sit under. Have ready: the registration document, the administrator's identity document, an email address on the university domain, and a mobile number that receives SMS. Then complete **微信认证 (WeChat certification)** — the fee in §A5.
+
+**You should see:** an **AppID** in 设置 → 基本设置, a string starting with `wx`.
+
+**Then:** 设置 → 基本设置 → 服务类目 (service category) → choose the closest education category offered to this entity type.
+
+**If not:** registration stalls most often on the entity document or on the certification payment; the platform states which. Nothing in our code depends on the choice of category, so it does not block testing — testing can start in the developer tool before review.
+
+**Two calendar risks to confirm at this point**, neither of which changes the code:
+- whether **小程序备案 (ICP filing)** applies to this entity type; if it does, add its stated working days;
+- the exact **certification fee** for the entity type.
+
+- [ ] AppID issued (write it here: `wx____________________`)
+- [ ] Service category set
+- [ ] Certification paid
+
+## B4. Step 3 — Add the maintainer as a project member (5 minutes)
+
+**Where:** https://mp.weixin.qq.com → 管理 → 成员管理 → 项目成员 → 添加成员.
+
+**Do:** scan the QR with the maintainer's WeChat, then grant **开发者 (developer)**. Developer rights are what allow deploying cloud functions.
+
+**You should see:** the maintainer listed under 项目成员.
+
+**If not:** the account must have completed certification before members can be added.
+
+- [ ] Maintainer added as 开发者
+
+## B5. Step 4 — Open the project in WeChat DevTools (10 minutes)
+
+**Where:** https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html → **稳定版 Stable**.
+
+**Do:** install, log in by scanning the QR with the administrator's or maintainer's WeChat, then **导入项目 (Import project)**:
+- **目录 (Directory):** the folder from §B2 containing `project.config.json`
+- **AppID:** paste the `wx…` value from §B3
+- leave 不使用云服务 (do not use cloud services) **unticked**
+
+**You should see:** the project compiles, and the simulator shows the intro screen **“BBA Career Journey”**. The console may warn that the environment is not found — expected, that is §B6.
+
+**If not:** a red compile error means the wrong folder was imported; the AppID field rejecting the value means the account is not certified yet.
+
+- [ ] Project imported and compiling
+
+## B6. Step 5 — Create the cloud environment (10 minutes)
+
+**Where:** inside DevTools, the **云开发 (CloudBase)** button in the toolbar.
+
+**Do:** 开通 (enable) → create one environment, name it `career-observatory`, choose the free/usage-based plan. When it finishes, copy the **环境 ID (environment ID)** — a string like `career-observatory-1a2b3c4d5e6f7g`.
+
+**Then:** open `config.js` in the project and put that ID inside the quotes:
+```js
+envId: 'career-observatory-1a2b3c4d5e6f7g',
+```
+Save. (Leaving it empty uses the default environment, which is acceptable if this is the only one — but pasting the ID is unambiguous, so paste it.)
+
+**You should see:** the 云开发 console opens with an empty database and an empty function list.
+
+**If not:** “environment quota” messages mean the university already has environments; reuse one or ask WeChat for the quota.
+
+- [ ] Environment created (ID: `____________________________`)
+- [ ] `config.js` updated and saved
+
+## B7. Step 6 — Deploy the two cloud functions (10 minutes)
+
+**Where:** DevTools file tree on the left.
+
+**Do:** right-click `cloudfunctions/submitResponse` → **上传并部署：云端安装依赖 (Upload and deploy: install dependencies in the cloud)**. Wait for the success message. Then do the same for `cloudfunctions/getStatus`.
+
+**You should see:** both functions listed in 云开发 → 云函数, each with a recent deployment time.
+
+**If not:** “no permission” means the member is not a 开发者 (§B4); “cloud function directory not found” means `project.config.json` has been altered — it must keep `"cloudfunctionRoot": "cloudfunctions/"`.
+
+- [ ] `submitResponse` deployed
+- [ ] `getStatus` deployed
+
+## B8. Step 7 — Run the acceptance test (20 minutes)
+
+This is the step that proves it works. The `responses` collection does not exist yet; the first submission in check 5 creates it, which is why the permission check comes after.
+
+Use **预览 (Preview)** in DevTools to get a QR code, then scan with a phone that has WeChat (the same account the tool is logged in with is fine).
+
+| # | Do this | Expect |
+| --- | --- | --- |
+| 1 | Run `node scripts/check-schema.mjs` in the project folder (skip if Node is not installed) | `OK - 5 sections, 25 questions, 19 required.` |
+| 2 | Open the intro on the phone | The current round, e.g. “Round 2026 H2”, and a Start button |
+| 3 | Press **Start** | Section 1 of 5, progress 20% |
+| 4 | Press **Next** with required questions blank | A toast asking for the required questions; no advance |
+| 5 | Answer all five sections and submit | Confirmation screen with the date the next round opens |
+| 6 | 云开发 → 数据库 → `responses` | Exactly one document: 32-character `_id`, the right `cycle`, `instrumentVersion` `2026.1`, server `createdAt` |
+| 7 | Return to the intro | “Already completed”, with the submission date |
+| 8 | Clear the app's storage (or reopen on another phone with the same WeChat account) and reopen | Still “Already completed” — the check runs on the server |
+| 9 | Submit again by any route | Rejected as already submitted; still exactly one document |
+| 10 | Delete that document in the console and reopen the intro | The round is open again |
+
+Checks 6, 8 and 9 are the ones that matter: they prove the round arithmetic, the duplicate control and the server-side validation — the three things that cannot be faked by a prototype.
+
+**Then tighten the collection:** 云开发 → 数据库 → `responses` → **权限设置 (permissions)** → **仅创建者可读写 (creator only)** → save. All access goes through the functions, which bypass these rules, so this costs nothing functionally and closes direct access.
+
+- [ ] Checks 1–10 pass
+- [ ] Permission set to 仅创建者可读写
+- [ ] Test document deleted
+
+## B9. Step 8 — Privacy declaration and release (review takes 1–7 days)
+
+**Where:** https://mp.weixin.qq.com → 设置 → 服务内容声明 → **用户隐私保护指引 (user privacy guidelines)**.
+
+**Do:** declare what is collected. In the code that is exactly one thing: the WeChat identifier (`openid`), used solely to stop the same student submitting twice in a round. The survey asks for no name, no student number, no phone, no email, no location, and does not use the contacts, camera, microphone or album. Answer the form accordingly; do not declare more than that, because the declaration is checked against behaviour.
+
+**Then:** 管理 → 版本管理 → the development version → **提交审核 (submit for review)** → after approval, **发布 (publish)**.
+
+**You should see:** the mini program searchable by name, and openable by QR code.
+
+**If not:** review rejections at this stage are almost always the privacy declaration not matching the code, or a service category that does not cover surveys. Both are corrected on the platform, not in the code.
+
+- [ ] Privacy declaration submitted
+- [ ] Review passed
+- [ ] Published
+
+## B10. Step 9 — Hand back
+
+Send the four-line reply in §B12 with the AppID and environment ID filled in. From that moment the Faculty can collect without IT's involvement; the only recurring action is the annual certification.
+
+---
+
+## B11. Troubleshooting — the failures that actually happen
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| The app runs but nothing saves; console mentions `touristappid` | Still in tourist mode | Re-import with the real AppID (§B4) |
+| `wx.cloud is undefined` | Base library too old | 详情 → 本地设置 → set the debug base library to the latest |
+| Submit returns `db_error`; console shows `-502005` | The collection did not exist | It is created automatically on first write; if it persists, create `responses` manually in the console and retry |
+| Console shows `-502004` when the intro loads | No response document for this round — normal | Nothing; the intro shows “round open” |
+| Submit returns `incomplete` with a field name | Client and server disagree on required questions | Run `node scripts/check-schema.mjs`; it names the mismatch |
+| Submit returns `already` | This WeChat account already answered this round | Intended behaviour |
+| `-404011 cloud function execution error` | Function not deployed, or deployed to a different environment | Redeploy (§B7), check the environment selected in the 云开发 console header |
+| “No permission” when deploying | Member is not a 开发者 | §B4 |
+| Data does not appear in the console | The console is showing a different environment | Switch environment in the 云开发 header |
+| Preview QR code expired | Normal | Regenerate it |
+
+---
+
+## B12. What to send back
+
+Copy this, fill the blanks, send it as one message. That is the entire handover acknowledgement.
+
+```
+Career Observatory — setup complete
+AppID:            wx__________________
+Environment ID:   ____________________
+Acceptance test:  checks 1-10 passed on __ / __ / 2026
+Permission:       responses set to creator-only
+Notes:            (anything unexpected, one line)
+```
+
+---
+
+# Part C — Reference (only if something needs changing later)
+
+## C1. The screens
+
+1. **Intro** — states what the survey is, that it is anonymous, one response per round, drafts kept until submitted. Asks the server whether this account already answered this round. Three states: round open, already completed (with date and next round), server unreachable (Start anyway / Retry).
+2. **Survey** — five sections, one screen at a time, progress indicator, back and next. Required questions block *next*. Every answer is written to local storage as it is typed, so a call, a dead battery or a closed app loses nothing.
+3. **Confirmation** — round complete, next round date. Closing it returns to the intro, which now shows “already completed”.
+
+Nothing is shown to the student after submission: no score, no comparison, no feedback. Deliberate — it keeps the instrument neutral and promises nothing the Faculty has not committed to.
+
+## C2. The instrument
+
+Five sections, 25 questions, 19 required. `data/questions.js` holds every wording, every bilingual label and every stored key.
+
+| Section | Questions | Captures |
+| --- | --- | --- |
+| About You | 3 | Year 4 or graduated; programme; origin |
+| Career Aspirations | 6 | Why CityU, why the major, preferred career and industry, expected monthly salary (MOP), postgraduate intentions |
+| Experience During Studies | 8 | Internships, competitions, certifications, exchange, leadership, AI tools, coaching, industry contacts |
+| Career Readiness | 6 | Six statements on a 1–5 scale: I know the career I want; I know how to obtain it; I have relevant experience; I have useful contacts; I feel employable; I am confident of finding work |
+| Suggestions | 1 | Free text on what would improve employability |
+
+The six readiness statements are the comparable core: stable across rounds, and the natural candidate for attach-to-course-evaluation later — the same stream can test whether a course change moved how prepared students feel, without a second set of double-barrelled items.
+
+## C3. Rounds
+
+Two per academic year, computed in UTC+8 on both phone and server, so the boundary never depends on where a device is:
+
+- **H1** = 1 February to 31 July → `YYYYH1`
+- **H2** = 1 August to 31 January → `YYYYH2`, January belonging to the previous year's H2
 
 Examples: 15 March 2027 → `2027H1`; 15 January 2027 → `2026H2`; 1 August 2026 → `2026H2`.
 
-The server **ignores** any round label the phone sends and computes its own. A phone with a wrong clock or a tampered client cannot invent a round.
+The server ignores whatever round the phone sends and computes its own, so a wrong clock or a tampered client cannot invent a round.
 
----
+## C4. Duplicate control
 
-## 6. Duplicate control, and why it is not a client-side check
+Each document's `_id` is the first 32 hex characters of `sha256(openid | cycle)`. The database refuses a second write with the same `_id`, so a student who reinstalls, clears storage or uses two devices is still rejected within a round, and can answer again in the next one.
 
-Each response document's `_id` is the first 32 hex characters of `sha256(openid | cycle)`. The database refuses a second write with the same `_id`. So:
+This is why the survey is described as **pseudonymous, not anonymous**: the Faculty cannot name a respondent, but the database can recognise that an account already answered, and the same account's rounds are linkable by design — that linkage is the point of a longitudinal stream. Say this plainly in any ethics or privacy filing; do not describe it as anonymous.
 
-- A student who reinstalls, clears storage, or submits from two devices in the same round is still rejected.
-- A student who submits in H1 can submit again in H2, because the round is part of the key.
-- The rejection is a database constraint, not a suggestion the app could skip.
-
-This is why the survey is described as **pseudonymous, not anonymous**: the Faculty cannot name a respondent, but the database can recognise that a WeChat account has already answered this round, and the same account's two responses across rounds are linkable by design — that linkage is the entire point of a longitudinal stream. This distinction should be stated plainly in any ethics or privacy filing.
-
----
-
-## 7. What is stored
+## C5. Stored data
 
 One collection, `responses`, one document per student per round:
 
@@ -105,110 +321,27 @@ One collection, `responses`, one document per student per round:
 }
 ```
 
-Server-side rules, all enforced in `cloudfunctions/submitResponse/index.js`:
+Server-side rules, all in `cloudfunctions/submitResponse/index.js`: flat scalars only, keys matching `^[a-z_]{1,40}$`; each answer trimmed and capped at 2,000 characters; payload capped at 60 kB; the 19 required questions re-checked on the server; `createdAt` set by the server.
 
-- Only flat scalar values are kept; keys must match `^[a-z_]{1,40}$`; anything else is dropped.
-- Each answer is trimmed and capped at 2,000 characters; the whole payload is capped at 60 kB.
-- The 19 required questions are re-checked on the server; the client's validation is a courtesy, not the guarantee.
-- `createdAt` is set by the server, not the phone.
+**Export:** 云开发 → 数据库 → `responses` → 导出. Drop `_id` before sharing outside the Faculty — it is a hash of a WeChat identifier and a stable per-student key.
 
-The collection is created automatically on the first successful submission, and its permission must then be set to **仅创建者可读写** (creator-only read/write). All reads and writes go through the cloud functions, which bypass collection rules, so students never touch the database directly and no client can read another student's answer.
+## C6. Deliberately absent
 
-### Getting data out
+- **No reminder mechanism.** WeChat forbids unsolicited push. 订阅消息 gives one message per student subscription, which cannot replace email or TronClass as the channel that brings students back each round. Not scaffolded because it cannot be tested until a template exists.
+- **No dashboard.** Export and analysis are console-side today. A dashboard is a sensible second phase and a poor first one: it would have been built against zero real responses.
+- **No language toggle.** Bilingual in place, as in the earlier web version.
+- **No identity fields.** No name, no student number, no email. Linking responses to academic records would be a different instrument with a different consent conversation and should not be bolted onto this one.
 
-云开发 console → 数据库 → `responses` → 导出. The export is the analysis dataset. Before sharing it outside the Faculty, drop `_id`: it is a hash of a WeChat identifier and, while not reversible in practice, it is a stable per-student key.
+## C7. Changing the instrument later
 
----
+- Never rename an existing question key: it is the stored column. Add a new key and leave the old one.
+- Bump `instrumentVersion` in `config.js` whenever a question changes; it is stored with every response.
+- If the required set changes, update `REQUIRED` in `cloudfunctions/submitResponse/index.js` and run `node scripts/check-schema.mjs`. It fails loudly on any client/server disagreement.
 
-## 8. What IT has to do
+## C8. Contact
 
-Ordered, with the reason for each step. Steps 1–3 are registration and approval; steps 4–7 are technical and take under an hour once 1–3 are done.
+José Pinto, Faculty of Business — instrument, code, analysis.
+IT — AppID, environment, collection permission.
 
-1. **Register the mini program under a CityU entity**, so the AppID belongs to the university. The personal route is not available (it requires a mainland Chinese ID). The university's WeChat account administrator creates it and adds the survey maintainer as a project member with **开发** and **云开发** permissions.
-   *Confirm during registration:* the required 小程序类目 (category) and whether 小程序备案 (ICP filing) applies to this entity type. Both affect the calendar, not the code.
-2. **Complete 微信认证** for the account: RMB 300 per year, paid by the university. This is what allows the account to be linked to the university's identity and to use the cloud capabilities without limits.
-3. **Decide data ownership** (§10, decision 4) before any real response is collected.
-4. **Create one 云开发 (CloudBase) environment** in the mini program console. Note its environment ID.
-5. **Put that ID in `config.js`** (`envId`). Leaving it empty uses the default environment, which is acceptable for a single environment.
-6. **Deploy the two cloud functions**: in WeChat DevTools, right-click `cloudfunctions/submitResponse` → 上传并部署：云端安装依赖, then the same for `getStatus`. Both use `wx-server-sdk` and `crypto`, no other dependency.
-7. **Set the collection permission** to 仅创建者可读写 after the first submission creates `responses` (§7).
-8. **Declare the privacy policy** in 微信公众平台 → 用户隐私保护指引. What is collected is limited to the WeChat identifier used for duplicate control; the declaration must match the code, so it should list nothing beyond that. Then submit for review and publish.
-
-If CloudBase turns out to be unavailable for the chosen entity type, only `cloudfunctions/` has to change: the pages call the functions by name and store nothing themselves.
-
----
-
-## 9. Acceptance test
-
-Anyone, technical or not, can run this in WeChat DevTools with a registered AppID and an environment. It takes about twenty minutes and it either passes or it does not.
-
-| # | Do this | Expect |
-| --- | --- | --- |
-| 1 | Run `node scripts/check-schema.mjs` | `OK - 5 sections, 25 questions, 19 required.` |
-| 2 | Open the project in DevTools, compile, preview on a phone | Intro shows the current round, e.g. `Round 2026 H2`, with Start |
-| 3 | Press Start | Section 1 of 5, progress 20% |
-| 4 | Try Next with required questions blank | Toast: answer the required questions; no advance |
-| 5 | Complete all five sections and submit | Confirmation screen; next round date shown |
-| 6 | In 云开发 console, open `responses` | Exactly one document: 32-character `_id`, correct `cycle`, `instrumentVersion` `2026.1`, `answers` with the filled keys, server `createdAt` |
-| 7 | Return to the intro | *Already completed*, with the submission date |
-| 8 | Clear the app's storage and reopen | Still *already completed* — the check is server-side |
-| 9 | Submit again by any route | Rejected as `already`; no second document appears |
-| 10 | Delete that document in the console, reopen the intro | Round open again |
-
-Steps 6 to 9 are the ones that matter: they prove the round logic, the duplicate control and the server-side validation, which are the three things a client-side prototype cannot prove.
-
----
-
-## 10. Decisions needed
-
-Four, each with a recommendation. None is a technical choice; all four are ownership questions.
-
-1. **Who holds the AppID.** Recommended: the university, under the Faculty's use, with the maintainer added as a project member. An AppID held by an individual cannot be transferred cleanly later and ties the Faculty's data stream to one person's account.
-2. **Who pays the RMB 300 certification.** Recommended: the Faculty, as a recurring operating cost, not a research grant. It is annual and it lapses into restricted operation if unpaid.
-3. **Which cloud environment, and who administers it.** Recommended: one environment for this mini program only, administered by IT, with the maintainer holding 云开发 permissions for deployment. Sharing an environment with other applications complicates both cost attribution and access review.
-4. **Who owns the response data, and who may approve an export.** Recommended: the Faculty owns it; IT is custodian; the Dean (or a named delegate) approves exports for research use; the maintainer prepares them. This is the decision that should be written down before the first real submission, because it determines what the privacy declaration says and what a future ethics application can claim.
-
----
-
-## 11. Costs
-
-| Item | Amount | Notes |
-| --- | --- | --- |
-| WeChat certification | RMB 300 / year | Requires a university entity and a verified account |
-| CloudBase database and functions | RMB 0 at this volume | Free tier covers a cohort-scale survey twice a year; the paid floor is a few tens of RMB per month if usage grows |
-| Server, licence, per-student fee | RMB 0 | There is no server to run and no commercial dependency |
-| Staff time | Under one working day for IT setup; a few hours per round for the Faculty | Deployment, permission check, export |
-
-Already-committed Faculty resources: the instrument, the code, the schema guard and this handover are done. The outstanding cost is registration and one day of IT time.
-
----
-
-## 12. What is not built, and what happens when the instrument changes
-
-Deliberately absent:
-
-- **No reminder mechanism.** WeChat forbids unsolicited push. The only in-app option is 订阅消息, and one student subscription covers one message, so it cannot replace email or TronClass as the channel that actually brings students back each round. The reminder code is not scaffolded because it cannot be tested until a template exists.
-- **No dashboard.** Export and analysis are console-side today. A dashboard is a reasonable second phase and a poor first one: it would have been built against zero real responses.
-- **No language toggle.** Questions are bilingual in place, as in the earlier web version. A toggle is a later option if the bilingual layout becomes crowded.
-- **No identity fields.** No name, no student number, no programme-year roll, no email. If the Faculty later wants to link responses to academic records, that is a different instrument with a different consent conversation, and it should not be bolted onto this one.
-
-Rules for changing the instrument, so that rounds stay comparable:
-
-- Never rename an existing question key. Add a new key and leave the old one in place; the stored column is the key.
-- Bump `instrumentVersion` in `config.js` whenever a question changes. It is stored with every response.
-- If the set of required questions changes, update `REQUIRED` in `cloudfunctions/submitResponse/index.js` and run `node scripts/check-schema.mjs`. It fails loudly if the client and the server disagree.
-
----
-
-## 13. Open questions, stated plainly
-
-- **Entity type and filing.** Whether 小程序备案 applies, and which 类目 the account must declare, is decided by the platform at registration. Until that is answered the calendar has an unknown in it; the code does not.
-- **Who maintains it after the first round.** The instrument and the code are documented well enough for another person to operate, but a named maintainer should exist before the first round closes.
-- **Whether the readiness scale will be benchmarked.** If it will, the wording should be fixed now, before round one, rather than after two rounds of data exist.
-
----
-
-## 14. Contact
-
-José Pinto, Faculty of Business, City University of Macau — for anything about the instrument, the code or the analysis.
-IT — for the AppID, the environment and the collection permission.
+Repository: https://github.com/PINTOMACAU/cityu-career-observatory
+Web preview of the same instrument (renders, saves nothing): https://pintomacau.github.io/cityu-career-observatory/
