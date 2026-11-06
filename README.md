@@ -2,6 +2,8 @@
 
 The Faculty of Business is conducting an anonymous survey to better understand students' aspirations, career development and employability needs. Results will be used only in aggregate form. 商学院正在开展匿名调查，以了解学生的职业目标、发展情况及就业能力需求。所有结果仅用于汇总分析和改进学生支持服务。Career Intelligence & Graduate Outcomes Observatory for the Faculty of Business, City University of Macau. This project supports the collection and analysis of student aspirations, employability development, graduate outcomes, and alumni career progression through bilingual surveys and interactive dashboards. 澳门城市大学商学院职业情报及毕业生成果观察站。该项目通过双语调查和交互式仪表板支持收集和分析学生愿望、就业能力发展、毕业生成果和校友职业发展。
 
+**Reviewing or taking over this project?** Start with [HANDOVER.md](HANDOVER.md): what it is, what IT has to do, the acceptance test, the decisions needed, and the costs.
+
 ---
 
 ## Contents
@@ -13,7 +15,7 @@ The Faculty of Business is conducting an anonymous survey to better understand s
 | `utils/cycle.js` | Six-month round logic (H1 = Feb–Jul, H2 = Aug–Jan, UTC+8) |
 | `cloudfunctions/` | CloudBase functions: `submitResponse`, `getStatus` |
 | `scripts/check-schema.mjs` | Fails if the client and server disagree on required questions |
-| `students123.html`, `survey.html`, `survey123.json` | The earlier web version, kept for reference; Pages is off |
+| `students123.html`, `survey.html`, `survey123.json`, `index.html` | The earlier web version, kept for reference. Live at https://pintomacau.github.io/cityu-career-observatory/ — it renders the same instrument but saves nothing |
 
 ## Quick start
 
