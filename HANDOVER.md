@@ -28,7 +28,7 @@ The Registry route produces course-level satisfaction and double-barrelled items
 - **Cohort-scale coverage.** Every final-year student, not a self-selected sample, because it arrives through the channel students already use.
 - **Evidence for accreditation, programme review and the annual report** that does not depend on a survey someone has to re-commission each year.
 - **A research asset.** The readiness scale is a publishable dependent variable; the free-text item is a source of foresight on what students expect from the labour market. Course evaluation can be attached to it later as an outcome measure.
-- **No marginal cost per student.** No licence, no server, no per-response fee.
+- **No marginal cost per student.** No licence, no server, no per-response fee. At 2,500 enrolled students and 800 responses a year, the platform allowances are barely touched (§A6).
 
 ## A4. What must be decided
 
@@ -44,14 +44,34 @@ The Registry route produces course-level satisfaction and double-barrelled items
 | Item | Amount | Notes |
 | --- | --- | --- |
 | WeChat certification | RMB 300 / year (mainland entity); overseas entities are quoted in USD, about USD 99 / year | Confirm the current fee at registration; the entity type decides which applies |
-| Cloud database and functions | Effectively zero at this volume | A cohort survey twice a year sits inside the free tier; the paid floor is tens of RMB per month |
+| Cloud database and functions | Effectively zero at this volume | 800 responses and about 2 MB a year; the arithmetic is in §A6 |
 | Server, licence, per-student fee | Zero | There is no server to run and no commercial dependency |
 | IT time | Under one working day | Part B, steps 1–9, most of it waiting on registration approvals |
 | Faculty time | A few hours per round | Export and analysis |
 
 Already committed: the instrument, the code, the schema guard, the acceptance test and this document.
 
-## A6. What we are asking for
+## A6. Scale — 2,500 students, 400 intake, 400 graduates a year
+
+The sizing that matters is not the Faculty's headcount but the number of responses. The instrument is aimed at the final-year cohort, which is the annual graduate cohort: about **400 students per round**, two rounds a year.
+
+| Quantity | Arithmetic | Per round | Per year | Over 10 years |
+| --- | --- | --- | --- | --- |
+| Eligible respondents | 400 graduates a year | 400 | 800 | 8,000 |
+| Submissions at 60–80% response | 240–320 per round | 240–320 | 480–640 | 4,800–6,400 |
+| Worst case, every student answers both rounds | 400 × 2 | 400 | 800 | 8,000 |
+| Stored data at ~2.5 kB per response | 800 × 2.5 kB | ~1 MB | ~2 MB | ~20 MB |
+| Stored data at the 60 kB hard cap | 800 × 60 kB | 48 MB | 48 MB | 480 MB |
+| Server calls (status check + submit) | ~2 per visit, ~4 visits a year | ~1,600 | ~6,400 | 64,000 |
+| Peak day, first week of a round | 400 students in 2 days | ~800 calls | — | — |
+
+The 2,500 enrolled students matter for reach, not for load: if the Faculty later opened the same app to the whole student body for a shorter termly pulse, that would be 2,500 × 3 responses = 7,500 documents a year, about 19 MB, and roughly 15,000 server calls — still nowhere near the free tier's allowances.
+
+For comparison, the free tier of 云开发 is measured in tens of thousands of database operations per day and gigabytes of storage; this workload uses a low single-digit percentage of it even in the worst case, and a fraction of a percent in the realistic case. WeChat revises these allowances, so confirm the current figures in 云开发 console → 用量 (usage) before promising a number; what will not change is the shape of the arithmetic above.
+
+What this means for the annual cycle: data volume grows by about 2 MB a year, so it will be decades before storage is a consideration, and the number of students is irrelevant to the fee. The only cost that scales with anything is the annual certification, which does not scale at all.
+
+## A7. What we are asking for
 
 1. Confirm the principle: the Faculty collects its own outcome evidence, in addition to whatever the Registry collects.
 2. Nominate the IT colleague who will own Part B.
@@ -323,7 +343,7 @@ One collection, `responses`, one document per student per round:
 
 Server-side rules, all in `cloudfunctions/submitResponse/index.js`: flat scalars only, keys matching `^[a-z_]{1,40}$`; each answer trimmed and capped at 2,000 characters; payload capped at 60 kB; the 19 required questions re-checked on the server; `createdAt` set by the server.
 
-**Export:** 云开发 → 数据库 → `responses` → 导出. Drop `_id` before sharing outside the Faculty — it is a hash of a WeChat identifier and a stable per-student key.
+**Export:** 云开发 → 数据库 → `responses` → 导出. Drop `_id` before sharing outside the Faculty — it is a hash of a WeChat identifier and a stable per-student key. A full year is about 800 rows across 25 columns, comfortably under a megabyte, so it opens in Excel without special handling.
 
 ## C6. Deliberately absent
 
