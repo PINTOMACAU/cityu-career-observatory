@@ -58,8 +58,18 @@ That reminder code is deliberately not scaffolded here: it cannot be tested unti
 
 Each `answers` object is flat: `{ "year": "Year 4", "programme": "Marketing", "ready_direction": "4", ... }`.
 
+## Account and AppID
+
+The mini program has to be registered by an entity, not by an individual: the personal route needs a mainland Chinese ID, which is not available here. Two workable routes:
+
+- **CityU registers it** (the chosen route). The AppID belongs to the university, which also owns the review submission and the annual certification. Ask the university's WeChat account administrator for the AppID and to add you as a project member with 开发 and 云开发 permissions.
+- **Macau entity as 境外主体.** A Macau business registration can register a mini program as an overseas entity, with 微信认证 (about ¥300). Review requirements and some capabilities differ from mainland entities.
+
+Until an AppID exists the project runs in tourist mode, which has no CloudBase, so nothing can be saved.
+
+If CloudBase turns out to be unavailable for the chosen entity type, only `cloudfunctions/` has to change — the pages call the functions by name and store nothing themselves.
+
 ## Decisions still open
 
-- **Entity and AppID.** Who registers the mini program (CityU as a mainland entity, or an overseas entity) determines the available features and review route. Settle this before building further.
 - **Languages.** Questions are shown bilingually in place, as in the web version. A language toggle is a later option if the bilingual layout gets crowded.
 - **Rounds.** The H1/H2 calendar is set in two places (client and cloud functions); change both together.
